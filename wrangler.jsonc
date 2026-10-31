@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": "worker.ts",
+  "name": "nisia-pos",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    // Self reference required by OpenNext. "service" must equal "name" above.
+    // The daily job also calls the app through this binding (worker.ts).
+    { "binding": "WORKER_SELF_REFERENCE", "service": "nisia-pos" }
+  ],
+  "r2_buckets": [
+    // Private uploads: served only through app/api/files. Never attach a public domain to this bucket.
+    { "binding": "BUCKET", "bucket_name": "nisia-pos-files" },
+    // OpenNext incremental cache (prerendered pages). Create it with `wrangler r2 bucket create`.
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "nisia-pos-files-opennext-cache" }
+  ],
+  "triggers": {
+    // Daily at 19:00 UTC = 02:00 Asia/Bangkok
+    "crons": ["0 19 * * *"]
+  },
+  "vars": {
+    "APP_URL": "https://pos.nisiastudio.com",
+    // Only when modules.mcp.enabled (mcp.md): extra hostnames allowed in the Origin header of browser MCP clients
+    "MCP_ALLOWED_ORIGINS": ""
+  },
+  "routes": [{ "pattern": "pos.nisiastudio.com", "custom_domain": true }],
+  "observability": { "enabled": true }
+}

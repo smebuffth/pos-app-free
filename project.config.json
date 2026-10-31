@@ -1,0 +1,239 @@
+{
+  "app": {
+    "name": "Nisia POS",
+    "displayName": {
+      "th": "Nisia POS",
+      "en": "Nisia POS"
+    },
+    "domain": "pos.nisiastudio.com",
+    "locale": "th-TH",
+    "currency": "THB",
+    "timezone": "Asia/Bangkok",
+    "productKind": "point of sale system for a retail shop",
+    "description": "ระบบขายหน้าร้าน (POS) สำหรับร้านค้า ขายต่อได้แม้ไม่มีอินเทอร์เน็ต สแกนบาร์โค้ดขายได้ทันที และผู้ช่วย AI สำหรับเจ้าของร้าน"
+  },
+  "cloudflare": {
+    "worker": "nisia-pos",
+    "r2": "nisia-pos-files",
+    "accountZone": "nisiastudio.com"
+  },
+  "framework": {
+    "name": "nextjs",
+    "router": "app",
+    "deploy": "@opennextjs/cloudflare"
+  },
+  "database": {
+    "engine": "postgres-local",
+    "family": "postgres",
+    "hyperdrive": false,
+    "image": "postgres:17",
+    "localContainer": "local-postgres",
+    "database": "nisia_pos"
+  },
+  "theme": {
+    "default": "classic-blue",
+    "presets": [
+      {
+        "id": "classic-blue",
+        "label": "Classic Blue",
+        "mode": "light",
+        "tone": "cool",
+        "primary": "#1d4ed8"
+      },
+      {
+        "id": "royal",
+        "label": "Royal",
+        "mode": "light",
+        "tone": "cool",
+        "primary": "#4338ca"
+      },
+      {
+        "id": "sunset",
+        "label": "Sunset",
+        "mode": "light",
+        "tone": "warm",
+        "primary": "#c2410c"
+      },
+      {
+        "id": "rose",
+        "label": "Rose",
+        "mode": "light",
+        "tone": "warm",
+        "primary": "#be123c"
+      },
+      {
+        "id": "midnight",
+        "label": "Midnight",
+        "mode": "dark",
+        "tone": "dark",
+        "primary": "#3b82f6"
+      }
+    ]
+  },
+  "modules": {
+    "landing": true,
+    "auth": true,
+    "insurance": {
+      "enabled": false,
+      "quoteExpiryHours": 24,
+      "renewalReminderDays": 30,
+      "claimFile": {
+        "maxFiles": 10,
+        "maxBytes": 10485760,
+        "mime": [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "application/pdf"
+        ]
+      },
+      "paymentModeDefault": "local"
+    },
+    "store": {
+      "enabled": false,
+      "shipping": {
+        "flatSatang": 5000,
+        "freeOverSatang": 100000
+      },
+      "productMime": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "productMaxBytes": 5242880
+    },
+    "admin": true,
+    "ai": {
+      "enabled": true,
+      "provider": "anthropic",
+      "defaultModel": "claude-sonnet-5-5",
+      "promptMaxChars": 2000,
+      "rateLimitPerHour": 20
+    },
+    "mcp": {
+      "enabled": true,
+      "path": "/mcp",
+      "rateLimitPerMinute": 60,
+      "tokenTtlDays": 90,
+      "allowAdminScope": false,
+      "_note": "Read-only MCP for the POS: owners and managers, read scope only. See references/mcp.md."
+    }
+  },
+  "motion": {
+    "library": "framer-motion",
+    "reducedMotion": "user",
+    "durationsMs": {
+      "fast": 150,
+      "base": 240,
+      "slow": 400
+    },
+    "easing": [
+      0.22,
+      1,
+      0.36,
+      1
+    ]
+  },
+  "auth": {
+    "passwordMinLength": 8,
+    "sessionDays": 30,
+    "loginMaxFailures": 5,
+    "loginWindowMinutes": 15
+  },
+  "branding": {
+    "primaryColor": "#1d4ed8",
+    "backgroundColor": "#ffffff",
+    "logo": "public/logo/logo-mark.png"
+  },
+  "imagery": {
+    "generator": "codex",
+    "style": "modern-first transparent logo mark; semi-realistic hero, banners and section art; optional cartoon icons and CTA backgrounds",
+    "tone": "natural-brand-balanced",
+    "logoMark": "public/logo/logo-mark.png",
+    "iconBackground": "#1d4ed8",
+    "heroBackground": null,
+    "banners": [],
+    "ctaButtons": [],
+    "webpQuality": 78
+  },
+  "design": {
+    "generator": "codex",
+    "mode": "auto",
+    "screens": [
+      "login"
+    ],
+    "styles": {
+      "landing": "classic",
+      "dashboard": "sidebar"
+    },
+    "viewports": {
+      "mobile": {
+        "width": 390,
+        "height": 844
+      },
+      "desktop": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    "dir": "design"
+  },
+  "ui": {
+    "dashboardKit": "shadcn"
+  },
+  "navigation": {
+    "sidebarGroups": [
+      {
+        "id": "overview",
+        "label": "ภาพรวม",
+        "items": [
+          "home"
+        ]
+      },
+      {
+        "id": "sales",
+        "label": "การขาย",
+        "items": [
+          "sale",
+          "shifts",
+          "orders"
+        ]
+      },
+      {
+        "id": "inventory",
+        "label": "สินค้าและสต็อก",
+        "items": [
+          "products",
+          "categories",
+          "stock"
+        ]
+      },
+      {
+        "id": "reports",
+        "label": "รายงาน",
+        "items": [
+          "reports"
+        ]
+      },
+      {
+        "id": "account",
+        "label": "บัญชี",
+        "items": [
+          "accountSettings"
+        ]
+      }
+    ],
+    "adminGroup": {
+      "id": "admin",
+      "label": "ผู้ดูแล",
+      "items": [
+        "users",
+        "storeSettings",
+        "aiSettings"
+      ]
+    }
+  },
+  "admin": {
+    "email": null
+  }
+}

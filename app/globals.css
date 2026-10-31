@@ -1,0 +1,147 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../node_modules/shadcn/dist/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-anuphan);
+  /* Public-site utilities (kit-neutral) */
+  --color-bg: var(--brand-bg);
+  --color-tint: var(--brand-surface);
+  --color-fg: var(--brand-fg);
+  --color-subtle: var(--brand-muted);
+  --color-primary-fg: var(--brand-primary-fg);
+  --color-sky: var(--brand-sky);
+  /* shadcn semantic colours */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-primary-text: var(--primary-text);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* theme.default = classic-blue. Replace the seven --brand-* values with the row of your preset. */
+:root {
+  --brand-bg: #ffffff;
+  --brand-surface: #f5f8ff;
+  --brand-fg: #0f172a;
+  --brand-muted: #64748b;
+  --brand-primary: #1d4ed8;
+  --brand-primary-fg: #ffffff;
+  --brand-border: #e2e8f0;
+  /* The light blue of the logo bars. Decoration only: it does not reach AA as text on white. */
+  --brand-sky: #38bdf8;
+  color-scheme: light;
+
+  /* shadcn bridge */
+  --background: var(--brand-bg);
+  --foreground: var(--brand-fg);
+  --card: var(--brand-bg);
+  --card-foreground: var(--brand-fg);
+  --popover: var(--brand-bg);
+  --popover-foreground: var(--brand-fg);
+  --primary: var(--brand-primary);
+  --primary-foreground: var(--brand-primary-fg);
+  --primary-text: var(--brand-primary);          /* primary as text on a light tint (badges) */
+  --secondary: var(--brand-surface);
+  --secondary-foreground: var(--brand-fg);
+  --muted: var(--brand-surface);
+  --muted-foreground: color-mix(in srgb, var(--brand-muted) 85%, var(--brand-fg));  /* keeps AA on --muted */
+  --accent: var(--brand-surface);
+  --accent-foreground: var(--brand-fg);
+  --destructive: #b91c1c;
+  --success: #166534;
+  --warning: #92400e;
+  --border: var(--brand-border);
+  --input: var(--brand-border);
+  --ring: var(--brand-primary);
+  --radius: 0.625rem;
+  /* The sidebar sits on the page colour. The active item is the primary at 8% on it. */
+  --sidebar: var(--brand-bg);
+  --sidebar-foreground: var(--brand-fg);
+  --sidebar-primary: var(--brand-primary);
+  --sidebar-primary-foreground: var(--brand-primary-fg);
+  --sidebar-accent: color-mix(in srgb, var(--brand-primary) 8%, var(--brand-bg));
+  --sidebar-accent-foreground: var(--brand-primary);
+  --sidebar-border: var(--brand-border);
+  --sidebar-ring: var(--brand-primary);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
+  html { @apply font-sans; }
+}
+
+/* Landing page */
+@layer components {
+  /* A faint grid that fades out toward the edges, behind the hero. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--brand-primary) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--brand-primary) 7%, transparent) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 100%);
+  }
+  /* Both ends of the gradient stay above 4.5:1 on white, so the text keeps AA contrast. */
+  .text-gradient-brand {
+    background-image: linear-gradient(100deg, var(--brand-primary) 10%, #0369a1 90%);
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Scroll reveal (components/landing/Reveal.tsx). Visible by default; animates only where view timelines exist and
+   the OS allows motion, so content never depends on JavaScript or on a browser feature to appear. */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+/* Reduced motion: Framer Motion honours the OS setting through MotionConfig; this covers the kit's CSS animations. */
+@media (prefers-reduced-motion: reduce) {
+  *:not([data-slot="spinner"], .spinner), *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

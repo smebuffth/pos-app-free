@@ -1,0 +1,12 @@
+# Named Cloudflare Tunnel for Nisia POS. See README.md, "Cloudflare Tunnel".
+# Copy to cloudflared/config.yml and replace the three placeholders. config.yml and the credentials file are
+# ignored by git: the credentials file is a secret that lets anyone run this tunnel.
+
+tunnel: <TUNNEL-UUID>                                  # from: cloudflared tunnel create nisia-pos-dev
+credentials-file: /Users/<you>/.cloudflared/<TUNNEL-UUID>.json
+
+ingress:
+  # The hostname must also be in TUNNEL_HOSTNAMES in .env.local, or Next.js blocks the dev assets and Server Actions.
+  - hostname: pos-dev.example.com
+    service: http://localhost:3000                     # npm run dev. Use http://localhost:8787 for npm run cf:preview.
+  - service: http_status:404                           # required last rule: anything else gets a 404
